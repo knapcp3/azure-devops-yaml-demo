@@ -21,6 +21,8 @@ stages:
     jobs:
     - job: Test
       steps:
-        - script: npm test
+        - script: |
+            npm install
+            npm test
           workingDirectory: app
           displayName: 'run tests'
