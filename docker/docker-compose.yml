@@ -1,12 +1,12 @@
 version: '3.7'
 
 services:
-  azure-devops-yaml-demo-prod:
+  azure-devops-yaml-demo:
     build:
       context: ..
       dockerfile: './docker/Dockerfile'
       target: serve
-    container_name: 'azure-devops-yaml-demo'
+    container_name: 'azure-devops-yaml-demo-container'
     image: 'knapkk/azure-devops-yaml-demo'
     ports:
       - '3333:3333'
