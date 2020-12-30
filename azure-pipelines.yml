@@ -4,10 +4,23 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- script: |
-    npm install
-    npm run build
-  workingDirectory: app
-  displayName: 'npm install and build'
-  
+stages:
+  - stage: build
+    displayName: Build
+    jobs:
+    - job: Build
+      steps:
+        - script: |
+            npm install
+            npm run build
+          workingDirectory: app  
+          displayName: 'npm install and build'
+
+  - stage: test
+    displayName: Test
+    jobs:
+    - job: Test
+      steps:
+        - script: npm test
+          workingDirectory: app
+          displayName: 'run tests'
