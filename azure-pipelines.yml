@@ -23,6 +23,6 @@ stages:
       steps:
         - script: |
             npm install
-            npm test
+            npm test -- --watchAll=false
           workingDirectory: app
           displayName: 'run tests'
