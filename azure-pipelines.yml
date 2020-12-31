@@ -22,7 +22,7 @@ stages:
 
   - stage: build-and-push
     displayName: Build and push image to container registry
-    # jobs:
+    jobs:
     # - job: Build
     #   steps:
     #     - script: |
