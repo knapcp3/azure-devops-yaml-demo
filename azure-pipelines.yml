@@ -1,21 +1,14 @@
 trigger:
   - '*'
 
+variables:
+  DOCKER_USERNAME: $(DOCKER_USERNAME)
+  DOCKER_REPOSITORY: $(DOCKER_USERNAME)/azure-devops-yaml-demo
+
 pool:
   vmImage: 'ubuntu-latest'
 
 stages:
-  - stage: build
-    displayName: Build
-    jobs:
-    - job: Build
-      steps:
-        - script: |
-            npm install
-            npm run build
-          workingDirectory: app  
-          displayName: 'npm install and build'
-
   - stage: test
     displayName: Test
     jobs:
@@ -26,3 +19,53 @@ stages:
             npm test -- --watchAll=false
           workingDirectory: app
           displayName: 'run tests'
+
+  - stage: build-and-push
+    displayName: Build and push image to container registry
+    # jobs:
+    # - job: Build
+    #   steps:
+    #     - script: |
+    #         npm install
+    #         npm run build
+    #       workingDirectory: app  
+    #       displayName: 'npm install and build'
+
+    - job: BuildAndPushToRegistry
+      steps:
+        - script: |
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          env:
+            DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+          displayName: 'docker login'
+
+        - script: |
+            docker-compose build serve
+            docker-compose push serve
+          env:
+            DOCKER_IMAGE_TAG: $(Build.SourceBranchName)
+          displayName: 'docker build and push to registry'
+
+
+# steps:
+# - script: ./buildSomething.sh
+# - task: CopyFiles@2
+#   inputs:
+#     SourceFolder: '$(System.DefaultWorkingDirectory)'
+#     Contents: |
+#       **\*.js
+#       package.json
+#     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+# - task: PublishBuildArtifacts@1
+
+
+# - deployment: DeployWeb
+#   displayName: deploy Web App
+#   pool:
+#     vmImage: 'Ubuntu-latest'
+#   environment: ReleaseProd
+#   strategy:
+#     runOnce:
+#       deploy:
+#         steps:
+#         - script: echo Hello world
