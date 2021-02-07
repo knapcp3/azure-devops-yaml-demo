@@ -3,6 +3,8 @@
 # dependencies
 /app/node_modules
 
+docker/.env
+
 # testing
 /coverage
 
